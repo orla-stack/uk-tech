@@ -226,10 +226,12 @@ new Chart(cAiVC, {type:"bar",
   options:{layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.raw)}}},
     scales:{y:{...gridY,ticks:{callback:v=>"$"+v+"B"}},x:noX}}});
 
-// AI share of all UK VC (%) — bar, totals on bars, y from zero
-new Chart(cAiShare, {type:"bar",
+// AI share of all UK VC (%) — line, y from zero, labels above points
+new Chart(cAiShare, {type:"line",
   data:{labels:D.aiAnnual.labels, datasets:[{data:D.aiAnnual.share,
-    backgroundColor:D.aiAnnual.labels.map(l=>l==="2026"?GOLD:BLUE),borderRadius:5,datalabels:dlV(fmtPct)}]},
+    borderColor:BLUE,backgroundColor:"rgba(31,111,235,.10)",fill:true,borderWidth:3,tension:.3,
+    pointRadius:3,pointBackgroundColor:BLUE,
+    datalabels:{display:true,align:"top",offset:4,color:NAVY,font:{weight:"600",size:11},formatter:fmtPct}}]},
   options:{layout:{padding:{top:24}},plugins:{legend:{display:false},
       tooltip:{callbacks:{label:c=>c.raw+"% of UK VC"}}},
     scales:{y:{...gridY,beginAtZero:true,ticks:{callback:v=>v+"%"}},x:noX}}});
