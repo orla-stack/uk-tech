@@ -29,6 +29,7 @@
   section.block{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 26px 18px;margin:26px 0;
     box-shadow:0 1px 2px rgba(15,23,42,.04)}
   h2{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}
+  h3.mini{font-size:15px;margin:0 0 8px;color:var(--navy)}
   .sub{color:var(--muted);font-size:14.5px;margin:0 0 18px}
   .note{font-size:13px;color:var(--muted);margin:14px 0 2px;padding-left:12px;border-left:3px solid var(--blue)}
   .chart-box{position:relative;height:360px}
@@ -53,7 +54,6 @@
     <h1>UK tech: the data</h1>
     <p class="lede">Venture capital, AI funding, unicorns and the geography of the UK startup
       ecosystem. Data by Dealroom.co.</p>
-    <div class="kpis" id="kpis"></div>
   </div>
 </header>
 
@@ -61,9 +61,9 @@
 
   <section class="block">
     <h2>UK venture capital, by year</h2>
-    <p class="sub">Annual VC raised by UK startups, $B. 2026 is year-to-date.</p>
+    <p class="sub">Annual VC raised by UK startups, $B. 2026 data is to 25 June 2026.</p>
     <div class="takeaway">After the 2021 peak and the 2022-23 correction, UK VC rose again to
-      <b>$23.7B in 2025</b>, with 2026 year-to-date on a stronger pace than 2024.</div>
+      <b>$23.7B in 2025</b>, with 2026 (to 25 June 2026) on a stronger pace than 2024.</div>
     <div class="chart-box"><canvas id="cVcAnnual"></canvas></div>
     <p class="src">Source: Dealroom.co</p>
   </section>
@@ -77,17 +77,25 @@
 
   <section class="block">
     <h2>AI VC funding</h2>
-    <p class="sub">AI VC raised by UK startups ($B, bars) and AI as a share of all UK VC (%, line).
-      2026 is year-to-date.</p>
+    <p class="sub">AI VC raised by UK startups, and AI as a share of all UK VC. 2026 data is to 25 June 2026.</p>
     <div class="takeaway"><b>AI made up about a third of UK VC in 2025</b>, and the majority of UK VC
       so far in 2026.</div>
-    <div class="chart-box tall"><canvas id="cAi"></canvas></div>
+    <div class="two">
+      <div>
+        <h3 class="mini">AI VC funding ($B)</h3>
+        <div class="chart-box"><canvas id="cAiVC"></canvas></div>
+      </div>
+      <div>
+        <h3 class="mini">AI as a share of all UK VC (%)</h3>
+        <div class="chart-box"><canvas id="cAiShare"></canvas></div>
+      </div>
+    </div>
     <p class="src">Source: Dealroom.co</p>
   </section>
 
   <section class="block">
     <h2>UK share of European VC</h2>
-    <p class="sub">UK VC as a percentage of all European VC, by year. 2026 is year-to-date.</p>
+    <p class="sub">UK VC as a percentage of all European VC, by year. 2026 data is to 25 June 2026.</p>
     <div class="chart-box"><canvas id="cShare"></canvas></div>
     <p class="src">Source: Dealroom.co</p>
   </section>
@@ -108,7 +116,7 @@
     <div class="two">
       <div>
         <h2>VC across the UK, beyond London</h2>
-        <p class="sub">Top UK cities by VC raised, excluding London. Cumulative <span id="cityYear"></span> ($B).</p>
+        <p class="sub">Top UK metro areas by VC raised, excluding London. Cumulative <span id="cityYear"></span> ($B).</p>
         <div class="chart-box"><canvas id="cCityVC"></canvas></div>
       </div>
       <div>
@@ -125,28 +133,19 @@
 </main>
 
 <footer class="wrap">
-  <p>2026 figures are year-to-date (through <span id="cq"></span>). Currency: US dollars.</p>
+  <p>2026 data is to 25 June 2026. Currency: US dollars.</p>
   <p>Full underlying data, including the stage-by-stage breakdowns, is in the companion spreadsheet.<br>
   <a class="dl" href="UK-tech-data.xlsx">Download the data (Excel / Google Sheets)</a></p>
   <p>Source: Dealroom.co · Prepared for Rowland Manthorpe · <a href="https://dealroom.co">dealroom.co</a></p>
 </footer>
 
 <script>
-const D = {"vcAnnual": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [7.5, 9.35, 10.72, 11.62, 17.65, 17.46, 39.89, 30.77, 19.35, 18.57, 23.66, 17.06]}, "vcQuarterly": {"labels": ["2015 Q1", "2015 Q2", "2015 Q3", "2015 Q4", "2016 Q1", "2016 Q2", "2016 Q3", "2016 Q4", "2017 Q1", "2017 Q2", "2017 Q3", "2017 Q4", "2018 Q1", "2018 Q2", "2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q3", "2019 Q4", "2020 Q1", "2020 Q2", "2020 Q3", "2020 Q4", "2021 Q1", "2021 Q2", "2021 Q3", "2021 Q4", "2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4", "2025 Q1", "2025 Q2", "2025 Q3", "2025 Q4", "2026 Q1", "2026 Q2"], "data": [1.72, 1.84, 1.91, 2.03, 2.52, 2.44, 1.77, 2.62, 1.91, 2.63, 2.81, 3.35, 2.3, 3.13, 3.13, 3.05, 4.25, 5.08, 4.34, 3.99, 4.12, 3.67, 4.65, 5.03, 8.17, 10.3, 11.05, 10.36, 12.67, 9.04, 4.42, 4.63, 4.08, 4.27, 5.7, 5.29, 4.0, 5.95, 4.24, 4.38, 4.71, 3.72, 8.78, 6.45, 7.65, 9.4]}, "aiAnnual": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [0.75, 0.86, 1.42, 2.01, 2.96, 3.58, 5.16, 4.76, 3.76, 5.26, 8.18, 12.59], "share": [10.0, 9.2, 13.2, 17.3, 16.8, 20.5, 12.9, 15.5, 19.4, 28.3, 34.6, 73.8]}, "shareEurope": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [36.2, 38.8, 40.0, 34.7, 37.7, 36.4, 33.8, 32.4, 32.6, 33.1, 37.1, 39.5]}, "unicorns": {"labels": ["United States", "China", "United Kingdom", "Israel", "India", "Germany", "Canada", "France", "UK (ex-London)", "Sweden", "Australia"], "data": [2155, 498, 219, 131, 128, 92, 86, 66, 64, 57, 48]}, "citiesVC": {"labels": ["Cambridge", "Oxford", "Manchester", "Bristol", "Edinburgh", "Milton", "Reading", "Loughborough", "Stevenage", "Leeds"], "data": [10.19, 5.45, 3.12, 2.91, 2.16, 1.53, 1.37, 1.32, 1.22, 1.03], "year": "2015-2026", "london": 157.29, "rest": 66.3, "ratio": 2.4}, "unicornCities": {"labels": ["Cambridge", "Manchester", "Oxford", "Nottingham", "Birmingham", "Bristol", "Sheffield", "Leeds\u2013Bradford", "Edinburgh", "Windsor-Maidenhead"], "data": [15, 9, 8, 2, 2, 2, 2, 2, 2, 1], "london": 155}, "kpi": {"vc2025": 23.66, "vc2024": 18.57, "shareEU": 39.5, "aiShare": 73.8, "unicorns": 219, "exLondon": 64}, "current_quarter": "2026 Q2"};
+const D = {"vcAnnual": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [7.5, 9.35, 10.72, 11.62, 17.65, 17.46, 39.89, 30.77, 19.35, 18.57, 23.66, 17.06]}, "vcQuarterly": {"labels": ["2015 Q1", "2015 Q2", "2015 Q3", "2015 Q4", "2016 Q1", "2016 Q2", "2016 Q3", "2016 Q4", "2017 Q1", "2017 Q2", "2017 Q3", "2017 Q4", "2018 Q1", "2018 Q2", "2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q3", "2019 Q4", "2020 Q1", "2020 Q2", "2020 Q3", "2020 Q4", "2021 Q1", "2021 Q2", "2021 Q3", "2021 Q4", "2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4", "2025 Q1", "2025 Q2", "2025 Q3", "2025 Q4", "2026 Q1", "2026 Q2"], "data": [1.72, 1.84, 1.91, 2.03, 2.52, 2.44, 1.77, 2.62, 1.91, 2.63, 2.81, 3.35, 2.3, 3.13, 3.13, 3.05, 4.25, 5.08, 4.34, 3.99, 4.12, 3.67, 4.65, 5.03, 8.17, 10.3, 11.05, 10.36, 12.67, 9.04, 4.42, 4.63, 4.08, 4.27, 5.7, 5.29, 4.0, 5.95, 4.24, 4.38, 4.71, 3.72, 8.78, 6.45, 7.65, 9.4]}, "aiAnnual": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [0.75, 0.86, 1.42, 2.01, 2.96, 3.58, 5.16, 4.76, 3.76, 5.26, 8.18, 12.59], "share": [10.0, 9.2, 13.2, 17.3, 16.8, 20.5, 12.9, 15.5, 19.4, 28.3, 34.6, 73.8]}, "shareEurope": {"labels": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], "data": [36.2, 38.8, 40.0, 34.7, 37.7, 36.4, 33.8, 32.4, 32.6, 33.1, 37.1, 39.5]}, "unicorns": {"labels": ["United States", "China", "United Kingdom", "Israel", "India", "Germany", "Canada", "France", "UK (ex-London)", "Sweden", "Australia"], "data": [2155, 498, 219, 131, 128, 92, 86, 66, 64, 57, 48]}, "citiesVC": {"labels": ["Cambridge", "Oxford", "Manchester", "Bristol", "Edinburgh", "Reading", "Glasgow", "Leeds\u2013Bradford", "Birmingham", "Newcastle upon Tyne"], "data": [13.0, 9.2, 4.25, 2.94, 2.27, 1.52, 1.31, 1.3, 1.17, 0.86], "year": "2015-2026", "london": 157.29, "rest": 66.3, "ratio": 2.4}, "unicornCities": {"labels": ["Cambridge", "Manchester", "Oxford", "Nottingham", "Birmingham", "Bristol", "Sheffield", "Leeds\u2013Bradford", "Edinburgh", "Windsor-Maidenhead"], "data": [15, 9, 8, 2, 2, 2, 2, 2, 2, 1], "london": 155}, "kpi": {"vc2025": 23.66, "vc2024": 18.57, "shareEU": 39.5, "aiShare": 73.8, "unicorns": 219, "exLondon": 64}, "current_quarter": "2026 Q2"};
 const NAVY="#0B1F3A", BLUE="#1F6FEB", BLUE_SOFT="#9DC0F5", GOLD="#F59E0B", GREEN="#10B981", GREY="#CBD5E1";
 Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
 Chart.defaults.color = "#475569";
 
-// KPIs
-const k = D.kpi;
-document.getElementById("kpis").innerHTML = [
-  [`$${k.vc2025}B`, "UK VC raised, 2025"],
-  [`${Math.round(k.shareEU)}%`, "of all European VC (2026 YTD)"],
-  [`${Math.round(k.aiShare)}%`, "of UK VC is AI (2026 YTD)"],
-  [`#3`, `nation for unicorns (${k.unicorns})`],
-].map(([n,l])=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
 document.getElementById("cityYear").textContent = D.citiesVC.year;
-document.getElementById("cq").textContent = D.current_quarter;
 document.getElementById("londonUni").textContent = D.unicornCities.london + " unicorns";
 document.getElementById("londonVcLine").innerHTML =
   `London raised <b>$${Math.round(D.citiesVC.london)}B</b> of VC since 2015, about `+
@@ -183,17 +182,20 @@ new Chart(cVcQ, {type:"bar",
     scales:{y:{...gridY,ticks:{callback:v=>"$"+v+"B"}},
       x:{...noX,ticks:{maxRotation:90,minRotation:90,autoSkip:true,maxTicksLimit:24,font:{size:9}}}}}});
 
-// AI: bars ($B, totals on bars) + share line (%)
-new Chart(cAi, {data:{labels:D.aiAnnual.labels, datasets:[
-    {type:"bar",label:"AI VC ($B)",data:D.aiAnnual.data,backgroundColor:BLUE,borderRadius:5,order:2,yAxisID:"y",
-     datalabels:dlV(fmtB)},
-    {type:"line",label:"AI % of UK VC",data:D.aiAnnual.share,borderColor:GOLD,backgroundColor:GOLD,
-      borderWidth:3,tension:.3,pointRadius:3,order:1,yAxisID:"y1"}]},
-  options:{layout:{padding:{top:24}},plugins:{legend:{position:"top"},
-    tooltip:{callbacks:{label:c=>c.dataset.type==="line"?c.raw+"%":money(c.raw)}}},
-    scales:{y:{...gridY,position:"left",ticks:{callback:v=>"$"+v+"B"}},
-      y1:{position:"right",grid:{display:false},border:{display:false},ticks:{callback:v=>v+"%"},min:0},
-      x:noX}}});
+// AI VC funding ($B) — totals on bars
+new Chart(cAiVC, {type:"bar",
+  data:{labels:D.aiAnnual.labels, datasets:[{data:D.aiAnnual.data,
+    backgroundColor:D.aiAnnual.labels.map(l=>l==="2026"?GOLD:BLUE),borderRadius:5,datalabels:dlV(fmtB)}]},
+  options:{layout:{padding:{top:24}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.raw)}}},
+    scales:{y:{...gridY,ticks:{callback:v=>"$"+v+"B"}},x:noX}}});
+
+// AI share of all UK VC (%) — bar, totals on bars, y from zero
+new Chart(cAiShare, {type:"bar",
+  data:{labels:D.aiAnnual.labels, datasets:[{data:D.aiAnnual.share,
+    backgroundColor:D.aiAnnual.labels.map(l=>l==="2026"?GOLD:BLUE),borderRadius:5,datalabels:dlV(fmtPct)}]},
+  options:{layout:{padding:{top:24}},plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>c.raw+"% of UK VC"}}},
+    scales:{y:{...gridY,beginAtZero:true,ticks:{callback:v=>v+"%"}},x:noX}}});
 
 // Share of Europe — bar, y-axis from zero, totals on bars
 new Chart(cShare, {type:"bar",
