@@ -245,13 +245,19 @@ new Chart(cShare, {type:"bar",
       tooltip:{callbacks:{label:c=>c.raw+"% of European VC"}}},
     scales:{y:{...gridY,beginAtZero:true,ticks:{callback:v=>v+"%"}},x:noX}}});
 
-// London share of UK VC — bar, uniform colour (no year highlight), y from zero
+// London share of UK VC — 100% stacked (London + Rest of UK), direct labels
+const lonShare = D.londonShareUk.data;
+const restShare = lonShare.map(v => Math.round((100 - v) * 10) / 10);
 new Chart(cLondonShare, {type:"bar",
-  data:{labels:D.londonShareUk.labels, datasets:[{data:D.londonShareUk.data,
-    backgroundColor:BLUE,borderRadius:5,datalabels:dlV(fmtPct)}]},
-  options:{layout:{padding:{top:24}},plugins:{legend:{display:false},
-      tooltip:{callbacks:{label:c=>c.raw+"% of UK VC"}}},
-    scales:{y:{...gridY,beginAtZero:true,ticks:{callback:v=>v+"%"}},x:noX}}});
+  data:{labels:D.londonShareUk.labels, datasets:[
+    {label:"London", data:lonShare, backgroundColor:BLUE, stack:"s",
+     datalabels:{display:true,color:"#fff",font:{weight:"600",size:11},formatter:v=>v+"%"}},
+    {label:"Rest of UK", data:restShare, backgroundColor:"#CBD5E1", stack:"s",
+     datalabels:{display:true,color:NAVY,font:{weight:"600",size:11},formatter:v=>v+"%"}}]},
+  options:{plugins:{legend:{position:"top"},
+      tooltip:{callbacks:{label:c=>c.dataset.label+": "+c.raw+"% of UK VC"}}},
+    scales:{x:{...noX,stacked:true},
+      y:{...gridY,stacked:true,max:100,ticks:{callback:v=>v+"%"}}}}});
 
 // Unicorns by country — highlight UK + UK ex-London, totals on bars
 new Chart(cUni, {type:"bar",
